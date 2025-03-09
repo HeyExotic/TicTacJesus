@@ -1,7 +1,7 @@
 package org.example;
 import java.util.Scanner;
 
-public class TicTacToe {
+public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Game game = new Game();
