@@ -3,10 +3,25 @@ package org.example;
 import java.util.Scanner;
 
 public class Player {
-    private char symbol;
+    private final char symbol;
 
     public Player(char symbol) {
         this.symbol = symbol;
+    }
+
+    public static char chooseSymbol(Scanner scanner, String playerNumber) {
+        char symbol;
+        while (true) {
+            System.out.print("Player " + playerNumber + ", choose your symbol (single character): ");
+            String input = scanner.next();
+            if (input.length() == 1) {
+                symbol = input.charAt(0);
+                if (symbol != ' ' && symbol != '\t' && symbol != '\n') {
+                    return symbol;
+                }
+            }
+            System.out.println("Invalid symbol. Please enter a single visible character.");
+        }
     }
 
     public char getSymbol() {

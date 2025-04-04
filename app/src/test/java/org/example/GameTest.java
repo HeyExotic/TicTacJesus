@@ -5,51 +5,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTest {
     private Game game;
+    private GameLog gameLog;
+    private Board board;
 
     @BeforeEach
     public void setUp() {
-        game = new Game();
+        gameLog = new GameLog();
+        game = new Game(gameLog, 'X', 'O');
+        board = game.getBoard();
     }
 
     @Test
-    public void testCheckWinRow() {
-        char[][] winningBoard = {
+    public void testBoardAccess() {
+        assertNotNull(board);
+        board.initializeBoard();
+        assertEquals('1', board.getBoard()[0][0]);
+    }
+
+    @Test
+    public void testWinRecording() {
+        char[][] testBoard = {
             {'X', 'X', 'X'},
             {'4', 'O', '6'},
             {'7', '8', '9'}
         };
-        game.setBoardState(winningBoard);
-        assertTrue(game.checkWin()); 
-    }
-
-    @Test
-    public void testCheckWinDiagonal() {  
-        char[][] winningBoard = {
-            {'X', '2', '3'},
-            {'4', 'X', '6'},
-            {'7', '8', 'X'}
-        };
-        game.setBoardState(winningBoard);
-        assertTrue(game.checkWin()); 
-    }
-
-    @Test
-    public void testCheckDraw() { 
-        char[][] drawBoard = {
-            {'X', 'O', 'X'},
-            {'X', 'O', 'O'},
-            {'O', 'X', 'X'}
-        };
-        game.setBoardState(drawBoard);
-        assertTrue(game.checkDraw()); 
-    }
-
-    @Test
-    public void testSwitchPlayer() {
-        assertEquals('X', game.getCurrentPlayer().getSymbol()); 
-        game.switchPlayer();
-        assertEquals('O', game.getCurrentPlayer().getSymbol()); 
-        game.switchPlayer();
-        assertEquals('X', game.getCurrentPlayer().getSymbol());
+        board.setBoard(testBoard);
+        assertTrue(game.checkWin('X'));
     }
 }

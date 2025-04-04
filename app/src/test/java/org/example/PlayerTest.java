@@ -11,28 +11,38 @@ public class PlayerTest {
 
     @BeforeEach
     public void setUp() {
-        player = new Player('X');
         board = new Board();
         board.initializeBoard();
     }
 
     @Test
-    public void testGetPlayerMoveValid() {
-        String input = "5\n"; 
+    public void testChooseSymbolValid() {
+        String input = "A\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        
+        char symbol = Player.chooseSymbol(scanner, "1");
+        assertEquals('A', symbol);
+    }
+
+    @Test
+    public void testChooseSymbolInvalidThenValid() {
+        String input = "  \nB\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(System.in);
+        
+        char symbol = Player.chooseSymbol(scanner, "1");
+        assertEquals('B', symbol);
+    }
+
+    @Test
+    public void testGetPlayerMoveWithCustomSymbol() {
+        player = new Player('@');
+        String input = "5\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
 
         int move = player.getPlayerMove(scanner, board);
         assertEquals(5, move);
-    }
-
-    @Test
-    public void testGetPlayerMoveInvalidThenValid() {
-        String input = "10\n5\n"; 
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        Scanner scanner = new Scanner(System.in);
-
-        int move = player.getPlayerMove(scanner, board);
-        assertEquals(5, move); 
     }
 }

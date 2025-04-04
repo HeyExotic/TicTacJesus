@@ -1,0 +1,6 @@
+=== Tic-Tac-Toe Game Log ===
+Player A wins: 1
+Player B wins: 1
+Ties: 0
+Total games played: 2
+===========================

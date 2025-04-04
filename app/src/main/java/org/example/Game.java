@@ -2,103 +2,66 @@ package org.example;
 import java.util.Scanner;
 
 public class Game {
-    private Board board;
-    private Player player1;
-    private Player player2;
+    private final Board board;
+    private final Player player1;
+    private final Player player2;
     private Player currentPlayer;
-    private boolean gameOver;
+    private final GameLog gameLog;
 
-    public Game() {
-        board = new Board();
-        player1 = new Player('X');
-        player2 = new Player('O');
-        currentPlayer = player1;
-        gameOver = false;
+    public Game(GameLog gameLog, char player1Symbol, char player2Symbol) {
+        this.board = new Board();
+        this.player1 = new Player(player1Symbol);
+        this.player2 = new Player(player2Symbol);
+        this.currentPlayer = player1;
+        this.gameLog = gameLog;
+        this.gameLog.setPlayerSymbols(String.valueOf(player1Symbol), String.valueOf(player2Symbol));
     }
 
-    public void setBoardState(char[][] newBoard) {
-        board = new Board();
-        board.setBoard(newBoard);
+    public boolean checkWin(char symbol) {
+        return board.checkWin(symbol);
     }
-    
+
     public void startGame(Scanner scanner) {
         board.initializeBoard();
-        System.out.println("Welcome to Tic-Tac-Toe!");
+        System.out.println("\nStarting new game!");
+        System.out.println("Player 1: " + player1.getSymbol());
+        System.out.println("Player 2: " + player2.getSymbol());
+        gameLog.displayStats();
 
-        while (!gameOver) {
+        while (true) {
             board.displayBoard();
             int move = currentPlayer.getPlayerMove(scanner, board);
             board.makeMove(move, currentPlayer.getSymbol());
-            checkGameStatus();
-            if (!gameOver) {
-                switchPlayer();
+
+            if (board.checkWin(currentPlayer.getSymbol())) {
+                board.displayBoard();
+                System.out.println("Player " + currentPlayer.getSymbol() + " wins! Congratulations!");
+                gameLog.recordGame(String.valueOf(currentPlayer.getSymbol()));
+                gameLog.displayStats();
+                switchStartingPlayer();
+                break;
+            } else if (board.checkDraw()) {
+                board.displayBoard();
+                System.out.println("The game is a draw!");
+                gameLog.recordGame("Tie");
+                gameLog.displayStats();
+                switchStartingPlayer();
+                break;
             }
-        }
-
-        System.out.print("Do you want to play again? (yes/no): ");
-        String playAgainInput = scanner.next().toLowerCase();
-        if (playAgainInput.equals("yes")) {
-            resetGame();
-            startGame(scanner);
-        } else {
-            System.out.println("Thanks for playing Tic-Tac-Toe!");
+            switchPlayer();
         }
     }
 
-   
-    private void checkGameStatus() {
-        if (checkWin()) {
-            board.displayBoard();
-            System.out.println("Player " + currentPlayer.getSymbol() + " wins! Congratulations!");
-            gameOver = true;
-        } else if (checkDraw()) {
-            board.displayBoard();
-            System.out.println("The game is a draw!");
-            gameOver = true;
-        }
-    }
-
-    
-    boolean checkWin() {
-        char[][] boardState = board.getBoard();
-        char symbol = currentPlayer.getSymbol();
-
-   
-        for (int i = 0; i < 3; i++) {
-            if (boardState[i][0] == symbol && boardState[i][1] == symbol && boardState[i][2] == symbol) return true; 
-            if (boardState[0][i] == symbol && boardState[1][i] == symbol && boardState[2][i] == symbol) return true; 
-        }
-        if (boardState[0][0] == symbol && boardState[1][1] == symbol && boardState[2][2] == symbol) return true;
-        if (boardState[0][2] == symbol && boardState[1][1] == symbol && boardState[2][0] == symbol) return true; 
-        return false;
-    }
-
-
-    boolean checkDraw() {
-        char[][] boardState = board.getBoard();
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                if (boardState[row][col] != 'X' && boardState[row][col] != 'O') {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-  
-    void switchPlayer() {
+    private void switchPlayer() {
         currentPlayer = (currentPlayer == player1) ? player2 : player1;
     }
 
-
-    private void resetGame() {
-        board.initializeBoard();
-        currentPlayer = player1;
-        gameOver = false;
+    private void switchStartingPlayer() {
+        currentPlayer = (currentPlayer == player1) ? player2 : player1;
+        System.out.println("\nNext game will start with Player " + currentPlayer.getSymbol());
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
+    public Board getBoard() {
+        return board;
     }
 }

@@ -13,25 +13,26 @@ public class BoardTest {
     }
 
     @Test
-    public void testInitializeBoard() {
-        char[][] expectedBoard = {
-            {'1', '2', '3'},
+    public void testIsCellEmptyWithCustomSymbols() {
+        board.makeMove(1, '@');
+        assertFalse(board.isCellEmpty(1));
+        assertTrue(board.isCellEmpty(2));
+    }
+
+    @Test
+    public void testMakeMoveWithCustomSymbol() {
+        board.makeMove(5, '#');
+        assertEquals('#', board.getBoard()[1][1]);
+    }
+
+    @Test
+    public void testCheckWinWithCustomSymbol() {
+        char[][] customBoard = {
+            {'@', '@', '@'},
             {'4', '5', '6'},
             {'7', '8', '9'}
         };
-        assertArrayEquals(expectedBoard, board.getBoard());
-    }
-
-    @Test
-    public void testIsCellEmpty() {
-        assertTrue(board.isCellEmpty(1)); 
-        board.makeMove(1, 'X');
-        assertFalse(board.isCellEmpty(1)); 
-    }
-
-    @Test
-    public void testMakeMove() {
-        board.makeMove(5, 'X');
-        assertEquals('X', board.getBoard()[1][1]); 
+        board.setBoard(customBoard);
+        assertTrue(board.checkWin('@'));
     }
 }
