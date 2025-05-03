@@ -46,7 +46,6 @@ public class GameLog {
         }
     }
 
-    // For testing
     public int getWinsForPlayer(String symbol) {
         return playerWins.getOrDefault(symbol, 0);
     }

@@ -59,13 +59,13 @@ public class Board {
         public boolean checkDraw() {
             for (int row = 0; row < 3; row++) {
                 for (int col = 0; col < 3; col++) {
-                    if (board[row][col] != 'X' && board[row][col] != 'O') {
+                    char cell = board[row][col];
+                    if (cell >= '1' && cell <= '9') {
                         return false;
                     }
                 }
             }
-            return true;
-            
+            return !checkWin('X') && !checkWin('O');
         }
     }
 
